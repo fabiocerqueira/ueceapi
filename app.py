@@ -1,9 +1,12 @@
 import os
 from flask import Flask, jsonify
 
+from model import RU
+
+
 app = Flask(__name__)
 
-from model import RU
+
 @app.route('/api/ru/menu')
 def ru_menu():
     ru = RU()
