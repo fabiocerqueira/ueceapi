@@ -1,5 +1,6 @@
-import urllib
 from bs4 import BeautifulSoup
+
+import urllib
 import re
 from datetime import datetime
 from unicodedata import normalize
