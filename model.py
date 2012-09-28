@@ -19,13 +19,12 @@ class RU(object):
             return {'error': 'Bad gateway'}
         soup = BeautifulSoup(html_doc)
         ru_trs = soup.find_all('tr', 'ru_head_title')
-        json_as_python = {}
+        json_as_python = []
         for tr in ru_trs:
             date = tr.text.strip().encode('latin-1')
             date = clean_text(date)
-            date_match = re.match(r'(?P<weekday>\w+) - \((?P<day>\d{2}/\d{2})\)', date)
+            date_match = re.match(r'\w+ - \((?P<day>\d{2}/\d{2})(/\d{2,4})?\)', date)
             date = date_match.groupdict()
-            date['weekday'] = date['weekday'].lower()
             year = str(datetime.now().year)
             day, month = date['day'].split('/')
             date['day'] = '%s-%s-%s' % (year, month, day)
@@ -33,7 +32,10 @@ class RU(object):
             content = re.sub(r'[Ss]ob[\.:]\s?', 'Sobremesa: ', content)
             content = content.encode('latin-1')
             content = content.split('\n')[:-1]
-            json_as_python[date['weekday']] = {'menu': content, 'date': date['day']}
+            json_as_python.append({
+                'date': date['day'],
+                'menu': content
+            })
         return json_as_python
 
 
