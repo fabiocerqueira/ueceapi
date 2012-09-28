@@ -13,7 +13,10 @@ def clean_text(text):
 class RU(object):
 
     def get_menu(self):
-        html_doc = urllib.urlopen('http://www.uece.br/uece/index.php/ru/2379')
+        try:
+            html_doc = urllib.urlopen('http://www.uece.br/uece/index.php/ru/2379')
+        except IOError:
+            return {'error': 'Bad gateway'}
         soup = BeautifulSoup(html_doc)
         ru_trs = soup.find_all('tr', 'ru_head_title')
         json_as_python = {}
