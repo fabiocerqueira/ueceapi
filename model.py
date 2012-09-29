@@ -1,3 +1,5 @@
+from werkzeug.contrib.cache import SimpleCache
+
 from bs4 import BeautifulSoup
 
 import urllib
@@ -6,6 +8,8 @@ from datetime import datetime
 from unicodedata import normalize
 
 
+cache = SimpleCache(['127.0.0.1:11211'])
+
 def clean_text(text):
     return normalize('NFKD', text.decode('utf-8')).encode('ASCII', 'ignore')
 
@@ -13,6 +17,13 @@ def clean_text(text):
 class RU(object):
 
     def get_menu(self):
+        menu = cache.get('uece_ru_menu')
+        if menu is None:
+            menu = self._update_menu()
+            cache.set('uece_ru_menu', menu, timeout=60 * 60 * 6)
+        return menu
+
+    def _update_menu(self):
         try:
             html_doc = urllib.urlopen('http://www.uece.br/uece/index.php/ru/2379')
         except IOError:
