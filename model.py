@@ -34,7 +34,7 @@ class RU(object):
         for tr in ru_trs:
             date = tr.text.strip().encode('latin-1')
             date = clean_text(date)
-            date_match = re.match(r'\w+ - \((?P<day>\d{2}/\d{2})(/\d{2,4})?\)', date)
+            date_match = re.match(r'\w+ - \(?(?P<day>\d{2}/\d{2})(/\d{2,4})?\)?', date)
             date = date_match.groupdict()
             year = str(datetime.now().year)
             day, month = date['day'].split('/')
