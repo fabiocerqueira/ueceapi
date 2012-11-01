@@ -11,7 +11,7 @@ from unicodedata import normalize
 cache = SimpleCache(['127.0.0.1:11211'])
 
 def clean_text(text):
-    return normalize('NFKD', text.decode('utf-8')).encode('ASCII', 'ignore')
+    return normalize('NFKD', text.decode('latin-1')).encode('ASCII', 'ignore')
 
 
 class RU(object):
@@ -34,14 +34,14 @@ class RU(object):
         for tr in ru_trs:
             date = tr.text.strip().encode('latin-1')
             date = clean_text(date)
-            date_match = re.match(r'\w+ - \(?(?P<day>\d{2}/\d{2})(/\d{2,4})?\)?', date)
+            date_match = re.match(r'\S+ - \(?(?P<day>\d{2}/\d{2})(/\d{2,4})?\)?', date)
             date = date_match.groupdict()
             year = str(datetime.now().year)
             day, month = date['day'].split('/')
             date['day'] = '%s-%s-%s' % (year, month, day)
             content = tr.find_next('tr').find('td').text.strip()
             content = re.sub(r'[Ss]ob[\.:]\s?', 'Sobremesa: ', content)
-            content = content.encode('latin-1')
+            content = content.encode('utf-8')
             content = content.split('\n')[:-1]
             json_as_python.append({
                 'date': date['day'],
